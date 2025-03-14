@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Simple_WebAPI.Interfaces.Services;
 using Simple_WebAPI.Models;
+using Simple_WebAPI.Models.DTOs;
 
 namespace Simple_WebAPI.Controllers;
 
@@ -40,7 +41,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult> CreateProduct([FromBody] Product product)
+    public async Task<ActionResult> CreateProduct([FromBody] ProductUpsertDTO product)
     {
         if(!ModelState.IsValid) 
             return BadRequest(ModelState);
@@ -51,7 +52,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPatch("{id}")]
-    public async Task<ActionResult> UpdateProduct([FromBody] Product product, int id)
+    public async Task<ActionResult> UpdateProduct([FromBody] ProductUpsertDTO product, int id)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
