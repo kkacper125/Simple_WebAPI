@@ -29,6 +29,19 @@ public class ProductService : IProductService
         }).ToArray();
     }
 
+    public async Task<IEnumerable<ProductResponseDTO>> GetProductsBySearchAsync(string? name, uint? minPrice, uint? maxPrice, int offset=0, int limit=5)
+    {
+        var products = await _productRepository.GetProductsBySearchAsync(name, minPrice, maxPrice, offset, limit);
+
+        return products.Select(p => new ProductResponseDTO 
+        {
+            Id = p.Id,
+            Name = p.Name,
+            Description = p.Description,
+            Cost = p.Cost
+        }).ToArray();
+    }
+
     public async Task<ProductResponseDTO?> GetProductByIdAsync(int id)
     {
         var product = await _productRepository.GetProductByIdAsync(id);

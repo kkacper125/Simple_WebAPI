@@ -22,6 +22,25 @@ public class ProductRepository : IProductRepository
     public async Task<Product?> GetProductByIdAsync(int id) => 
         await _dbContext.Products.Where(p => p.Id == id).FirstOrDefaultAsync();
 
+    public async Task<IEnumerable<Product>> GetProductsBySearchAsync(string? name, uint? minPrice, uint? maxPrice, int offset=0, int limit=5)
+    {
+        var query = _dbContext.Products.OrderBy(p => p.Name).AsQueryable();
+
+        if(!string.IsNullOrWhiteSpace(name))
+            query = query.Where(p => p.Name.Contains(name));
+
+        if(minPrice.HasValue)
+            query = query.Where(p => p.Cost >= minPrice.Value);
+
+        if(maxPrice.HasValue)
+            query = query.Where(p => p.Cost <= maxPrice.Value);
+        
+        return await query
+            .Skip(offset)
+            .Take(limit)
+            .ToListAsync();
+    }
+
     public async Task<Product> CreateProductAsync(Product product)
     {
         _dbContext.Products.Add(product);
