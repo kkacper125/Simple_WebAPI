@@ -3,6 +3,7 @@ using Simple_WebAPI.Contexts;
 using Simple_WebAPI.Contexts.Seeders;
 using Simple_WebAPI.Interfaces.Repositories;
 using Simple_WebAPI.Interfaces.Services;
+using Simple_WebAPI.Middlewares;
 using Simple_WebAPI.Repositories;
 using Simple_WebAPI.Services;
 
@@ -34,6 +35,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<InputSanitizationMiddleware>();
 
 app.UseHttpsRedirection();
 

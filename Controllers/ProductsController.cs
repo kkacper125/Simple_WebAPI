@@ -1,12 +1,6 @@
-using System.Net.Http.Headers;
-using System.Text;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Simple_WebAPI.Interfaces.Services;
-using Simple_WebAPI.Models;
 using Simple_WebAPI.Models.DTOs;
-using System.Text.Json;
-using System.Reflection.Metadata.Ecma335;
 
 
 namespace Simple_WebAPI.Controllers;
@@ -36,7 +30,7 @@ public class ProductsController : ControllerBase
     [HttpGet("search")]
     public async Task<ActionResult> GetProductsBySearch(string? name, uint? minPrice, uint? maxPrice, int offset = 0, int limit = 5)
     {
-
+        Console.WriteLine(name);
         var products = await _productService.GetProductsBySearchAsync(name, minPrice, maxPrice, offset, limit);
         if (!products.Any())
             return NoContent();
@@ -55,10 +49,11 @@ public class ProductsController : ControllerBase
         return Ok(product);
     }
 
-    
+
     [HttpPost]
     public async Task<ActionResult> CreateProduct([FromBody] ProductUpsertDTO product)
     {
+        Console.WriteLine(product.Name);
         if(!ModelState.IsValid) 
             return BadRequest(ModelState);
 
