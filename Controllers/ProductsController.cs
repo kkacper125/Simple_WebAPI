@@ -30,12 +30,16 @@ public class ProductsController : ControllerBase
     [HttpGet("search")]
     public async Task<ActionResult> GetProductsBySearch(string? name, uint? minPrice, uint? maxPrice, int offset = 0, int limit = 5)
     {
-        Console.WriteLine(name);
         var products = await _productService.GetProductsBySearchAsync(name, minPrice, maxPrice, offset, limit);
-        if (!products.Any())
-            return NoContent();
 
         return Ok(products);
+    }
+
+    [HttpGet("prices")]
+    public async Task<ActionResult> GetProductsPrices()
+    {
+        var prices = await _productService.GetProductsPricesAsync();
+        return Ok(prices);
     }
 
     [HttpGet("{id}")]
@@ -49,11 +53,9 @@ public class ProductsController : ControllerBase
         return Ok(product);
     }
 
-
     [HttpPost]
     public async Task<ActionResult> CreateProduct([FromBody] ProductUpsertDTO product)
     {
-        Console.WriteLine(product.Name);
         if(!ModelState.IsValid) 
             return BadRequest(ModelState);
 

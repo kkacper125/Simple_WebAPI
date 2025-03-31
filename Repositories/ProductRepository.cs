@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Simple_WebAPI.Contexts;
 using Simple_WebAPI.Interfaces.Repositories;
 using Simple_WebAPI.Models;
+using Simple_WebAPI.Models.DTOs;
 
 namespace Simple_WebAPI.Repositories;
 
@@ -40,6 +41,27 @@ public class ProductRepository : IProductRepository
             .Take(limit)
             .ToListAsync();
     }
+
+    public async Task<int> GetNumberOfProductsAsync(string? name, uint? minPrice, uint? maxPrice){
+        var query = _dbContext.Products.AsQueryable();
+
+        if(!string.IsNullOrWhiteSpace(name))
+            query = query.Where(p => p.Name.Contains(name));
+
+        if(minPrice.HasValue)
+            query = query.Where(p => p.Cost >= minPrice.Value);
+
+        if(maxPrice.HasValue)
+            query = query.Where(p => p.Cost <= maxPrice.Value);
+        
+        return await query.CountAsync();
+    }
+
+    public async Task<uint> GetProductMinPriceAsync() =>
+        await _dbContext.Products.MinAsync(p => p.Cost);
+
+    public async Task<uint> GetProductMaxPriceAsync()=>
+        await _dbContext.Products.MaxAsync(p => p.Cost);
 
     public async Task<Product> CreateProductAsync(Product product)
     {

@@ -37,7 +37,6 @@ public class InputSanitizationMiddleware
 
             if (body != null)
             {
-                Console.WriteLine("Body not null");
                 body = SanitizeJson(body);
             }
 
